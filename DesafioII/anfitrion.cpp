@@ -1,5 +1,6 @@
 #include "Anfitrion.h"
-#include <iostream>
+#include <cstdio>
+#include <cstring>
 
 Anfitrion::Anfitrion(const char* doc, int ant, float punt)
     : Usuario(doc, ant, punt) {
@@ -39,6 +40,5 @@ void Anfitrion::consultarReservasActivas() const {
 }
 
 void Anfitrion::mostrarDatos() const {
-    std::cout << "Anfitrion: " << documento << " | Antigüedad: " << antiguedad
-              << " meses | Puntuación: " << puntuacion << std::endl;
+    printf( "Anfitrion: %s | antiguedad: %d meses | Puntuacion: %.1" << endl << documento, antiguedad, puntuacion);
 }

@@ -1,5 +1,6 @@
 #include "Huesped.h"
-#include <iostream>
+#include <cstdio>
+#include <cstring>
 
 Huesped::Huesped(const char* doc, int ant, float punt)
     : Usuario(doc, ant, punt) {
@@ -40,11 +41,11 @@ void Huesped::anularReserva(int codigoReserva) {
                 reservas[j] = reservas[j + 1];
             }
             totalReservas--;
-            std::cout << "Reserva anulada.\n";
+            printf("Reserva anulada correctamente") << endl;
             return;
         }
     }
-    std::cout << "Reserva no encontrada.\n";
+    printf("Reserva no encontrada." << endl;
 }
 
 void Huesped::mostrarReservas() const {
@@ -54,6 +55,5 @@ void Huesped::mostrarReservas() const {
 }
 
 void Huesped::mostrarDatos() const {
-    std::cout << "Huesped: " << documento << " | Antigüedad: " << antiguedad
-              << " meses | Puntuación: " << puntuacion << std::endl;
+    printf("Huesped: %d meses | Puntuación: %.1f"<< endl <<, documento, antiguedad, puntuacion);
 }

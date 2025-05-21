@@ -1,15 +1,16 @@
 #include "Usuario.h"
-#include <iostream>
 #include <cstring>
 
 Usuario::Usuario(const char* doc, int ant, float punt) {
-    strncpy(documento, doc, 15);
+    strncpy(documento, doc, 14);
+    documento[14] = '\0';
     antiguedad = ant;
     puntuacion = punt;
 }
 
 Usuario::Usuario(const Usuario& other) {
-    strncpy(documento, other.documento, 15);
+    strncpy(documento, other.documento, 14);
+    documento[14] = '\0';
     antiguedad = other.antiguedad;
     puntuacion = other.puntuacion;
 }
