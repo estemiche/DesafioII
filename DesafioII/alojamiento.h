@@ -34,6 +34,7 @@ public:
     int getCodigo() const;
     float getPrecioPorNoche() const;
     const char* getMunicipio() const;
+    const char* getNombre() const;
     Anfitrion* getAnfitrion() const;
 
     void agregarAmenidad(const char* amenidad);
@@ -41,6 +42,7 @@ public:
 
     bool estaDisponible(int diaDelAnio, int noches) const;
     void reservar(int diaDelAnio, int noches);
+    void liberar(int diaInicio, int noches);
 
     void mostrarReservas(); // se enlaza con lista de Reservaciones más adelante
 };

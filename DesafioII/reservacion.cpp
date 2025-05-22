@@ -1,44 +1,31 @@
 #include "Reservacion.h"
-#include "Fecha.h"
-#include <cstdio>
+#include "Huesped.h"
+#include "Alojamiento.h"
 #include <cstring>
+#include <cstdio>
 
-Reservacion::Reservacion(int cod, Fecha f, int dur, const char* metodo, float m,
-                         const char* nota, Huesped* h, Alojamiento* a)
-    : codigo(cod), fechaInicio(f), duracion(dur), monto(m),
-    huesped(h), alojamiento(a) {
-    strncpy(metodoPago, metodo, 19);
-    metodoPago[19] = '\0';
-
-    strncpy(notas, nota, 1000);
-    notas[1000] = '\0';
+Reservacion::Reservacion(int codigo, Fecha fecha, int duracion,
+                         const char* metodoPago, float monto,
+                         const char* notas, Huesped* h, Alojamiento* a)
+{
+    this->codigo = codigo;
+    this->fechaInicio = fecha;
+    this->duracion = duracion;
+    strcpy(this->metodoPago, metodoPago);
+    this->monto = monto;
+    strcpy(this->notas, notas);
+    this->huesped = h;
+    this->alojamiento = a;
 }
 
-Reservacion::~Reservacion() {
-    // No elimina huésped ni alojamiento (se gestionan aparte)
-}
+int Reservacion::getCodigo() { return codigo; }
+Fecha Reservacion::getFechaInicio() { return fechaInicio; }
+int Reservacion::getDuracion() { return duracion; }
+const char* Reservacion::getMetodoPago() { return metodoPago; }
+float Reservacion::getMonto() { return monto; }
+const char* Reservacion::getNotas() { return notas; }
+Alojamiento* Reservacion::getAlojamiento() { return alojamiento; }
 
-int Reservacion::getCodigo() const {
-    return codigo;
-}
-
-Fecha Reservacion::getFechaInicio() const {
-    return fechaInicio;
-}
-
-int Reservacion::getDuracion() const {
-    return duracion;
-}
-
-float Reservacion::getMonto() const {
-    return monto;
-}
-
-void Reservacion::mostrarResumen() const {
-    printf("Reserva #%d\n", codigo);
-    printf("Fecha inicio: ");
-    fechaInicio.mostrarFecha();
-    printf(" | Duración: %d noche(s)\n", duracion);
-    printf("Método de pago: %s | Monto: %.2f\n", metodoPago, monto);
-    printf("Notas: %s\n", notas);
+void Reservacion::mostrarResumen() {
+    printf("Reserva #%d - %d noches - $%.2f - %s\n", codigo, duracion, monto, metodoPago);
 }

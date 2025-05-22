@@ -3,9 +3,8 @@
 
 #include "Fecha.h"
 
-class Huesped;       // Declaración adelantada
-class Alojamiento;   // Declaración adelantada
-
+class Huesped;
+class Alojamiento;
 class Reservacion {
 private:
     int codigo;
@@ -14,22 +13,23 @@ private:
     char metodoPago[20];
     float monto;
     char notas[1001];
-
     Huesped* huesped;
     Alojamiento* alojamiento;
 
 public:
-    Reservacion(int cod, Fecha f, int dur, const char* metodo, float monto,
-                const char* nota, Huesped* h, Alojamiento* a);
+    Reservacion(int codigo, Fecha fecha, int duracion,
+                const char* metodoPago, float monto,
+                const char* notas, Huesped* h, Alojamiento* a);
 
-    ~Reservacion();
+    int getCodigo();
+    Fecha getFechaInicio();
+    int getDuracion();
+    const char* getMetodoPago();
+    float getMonto();
+    const char* getNotas();
+    Alojamiento* getAlojamiento();
 
-    int getCodigo() const;
-    Fecha getFechaInicio() const;
-    int getDuracion() const;
-    float getMonto() const;
-
-    void mostrarResumen() const;
+    void mostrarResumen();
 };
 
 #endif

@@ -11,7 +11,8 @@ SOURCES += \
         main.cpp \
         plataforma.cpp \
         reservacion.cpp \
-        usuario.cpp
+        usuario.cpp \
+        utilidades.cpp
 
 HEADERS += \
     alojamiento.h \

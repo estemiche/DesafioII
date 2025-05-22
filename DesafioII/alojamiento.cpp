@@ -88,3 +88,11 @@ void Alojamiento::reservar(int diaDelAnio, int noches) {
 void Alojamiento::mostrarReservas() {
     printf("[Pendiente de implementar: conexión con lista de reservaciones]\n");
 }
+void Alojamiento::liberar(int diaInicio, int noches) {
+    for (int i = diaInicio; i < diaInicio + noches && i < 365; i++) {
+        disponibilidad[i] = false;
+    }
+}
+const char* Alojamiento::getNombre() const {
+    return nombre;
+}

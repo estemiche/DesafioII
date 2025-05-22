@@ -99,12 +99,12 @@ void Plataforma::menuHuesped(Huesped* h) {
     do {
         printf("\n--- Menú Huésped ---\n");
         printf("1. Buscar y reservar alojamiento\n2. Anular reservación\n3. Ver mis reservaciones\n4. Salir\nSeleccione una opción: ");
-        scanf("%d", &op);
+        scanf("%d", &opcion);
 
-        if (op == 1) buscarAlojamientos();
-        else if (op == 2) anularReservacion();
-        else if (op == 3) h->mostrarReservas();
-    } while (op != 4);
+        if (opcion == 1) buscarAlojamientos();
+        else if (opcion == 2) anularReservacion();
+        else if (opcion == 3) h->mostrarReservas();
+    } while (opcion != 4);
 }
 
 void Plataforma::menuAnfitrion(Anfitrion* a) {
@@ -112,11 +112,11 @@ void Plataforma::menuAnfitrion(Anfitrion* a) {
     do {
         printf("\n--- Menú Anfitrión ---\n");
         printf("1. Consultar reservaciones activas\n2. Actualizar histórico\n3. Salir\nSeleccione una opción: ");
-        scanf("%d", &op);
+        scanf("%d", &opcion);
 
-        if (op == 1) consultarReservasAnfitrion(a);
-        else if (op == 2) actualizarHistorico();
-    } while (op != 3);
+        if (opcion == 1) consultarReservasAnfitrion(a);
+        else if (opcion == 2) actualizarHistorico();
+    } while (opcion != 3);
 }
 
 void Plataforma::medirRecursos() {
@@ -234,4 +234,57 @@ void Plataforma::guardarDatos() {
                 huespedes[i]->getPuntuacion());
     }
     fclose(f);
+}
+void Plataforma::buscarAlojamientos() {
+    int d, m, a, noches;
+    char municipio[30];
+    float precioMax;
+    float puntuacionMin;
+
+    printf("Ingrese la fecha de inicio (DD MM AAAA): ");
+    scanf("%d %d %d", &d, &m, &a);
+    printf("Ingrese el municipio: ");
+    scanf("%s", municipio);
+    printf("Ingrese la cantidad de noches: ");
+    scanf("%d", &noches);
+
+    printf("¿Desea aplicar filtro de precio máximo por noche? (1 = Sí, 0 = No): ");
+    int filtroPrecio;
+    scanf("%d", &filtroPrecio);
+    if (filtroPrecio) {
+        printf("Ingrese el precio máximo: ");
+        scanf("%f", &precioMax);
+    }
+
+    printf("¿Desea aplicar filtro de puntuación mínima del anfitrión? (1 = Sí, 0 = No): ");
+    int filtroPunt;
+    scanf("%d", &filtroPunt);
+    if (filtroPunt) {
+        printf("Ingrese la puntuación mínima: ");
+        scanf("%f", &puntuacionMin);
+    }
+
+    Fecha fechaInicio(d, m, a);
+    int diaInicio = calcularDiaDelAnio(fechaInicio);
+
+    int encontrados = 0;
+    printf("\nAlojamientos disponibles:\n");
+    for (int i = 0; i < totalAlojamientos; i++) {
+        Alojamiento* al = alojamientos[i];
+        bool coincideMunicipio = strcmp(al->getMunicipio(), municipio) == 0;
+        bool cumplePrecio = !filtroPrecio || al->getPrecioPorNoche() <= precioMax;
+        bool cumplePunt = !filtroPunt || al->getAnfitrion()->getPuntuacion() >= puntuacionMin;
+        bool disponible = al->estaDisponible(diaInicio, noches);
+
+        if (coincideMunicipio && cumplePrecio && cumplePunt && disponible) {
+            printf("Código: %d | %s | $%.2f/noche | %.1f estrellas\n",
+                   al->getCodigo(), al->getNombre(), al->getPrecioPorNoche(),
+                   al->getAnfitrion()->getPuntuacion());
+            encontrados++;
+        }
+    }
+
+    if (encontrados == 0) {
+        printf("No se encontraron alojamientos disponibles bajo esos criterios.\n");
+    }
 }
