@@ -40,5 +40,5 @@ void Anfitrion::consultarReservasActivas() const {
 }
 
 void Anfitrion::mostrarDatos() const {
-    printf( "Anfitrion: %s | antiguedad: %d meses | Puntuacion: %.1" << endl << documento, antiguedad, puntuacion);
+    printf( "Anfitrion: %s | antiguedad: %d meses | Puntuacion: %.1/n", documento, antiguedad, puntuacion);
 }

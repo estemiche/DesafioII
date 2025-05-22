@@ -41,19 +41,20 @@ void Huesped::anularReserva(int codigoReserva) {
                 reservas[j] = reservas[j + 1];
             }
             totalReservas--;
-            printf("Reserva anulada correctamente") << endl;
+            printf("Reserva anulada correctamente.\n");
             return;
         }
     }
-    printf("Reserva no encontrada." << endl;
+    printf("Reserva no encontrada.\n");
 }
 
 void Huesped::mostrarReservas() const {
     for (int i = 0; i < totalReservas; i++) {
-        reservas[i]->mostrarResumen();
+        reservas[i]->mostrarResumen(); // se implementará en Reservacion
     }
 }
 
 void Huesped::mostrarDatos() const {
-    printf("Huesped: %d meses | Puntuación: %.1f"<< endl <<, documento, antiguedad, puntuacion);
+    printf("Huésped: %s | Antigüedad: %d meses | Puntuación: %.1f\n",
+           documento, antiguedad, puntuacion);
 }

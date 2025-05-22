@@ -23,3 +23,10 @@ HEADERS += \
     reservacion.h \
     usuario.h \
     utilidades.h
+
+DISTFILES += \
+    alojamientos.txt \
+    anfitriones.txt \
+    huespedes.txt \
+    reservas_activas.txt \
+    reservas_historicas.txt
