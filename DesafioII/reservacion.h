@@ -28,7 +28,7 @@ public:
     float getMonto();
     const char* getNotas();
     Alojamiento* getAlojamiento();
-
+    Huesped* getHuesped();
     void mostrarResumen();
 };
 

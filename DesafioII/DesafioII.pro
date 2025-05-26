@@ -20,14 +20,14 @@ HEADERS += \
     fecha.h \
     huesped.h \
     plataforma.h \
-    plataforma.h \
     reservacion.h \
     usuario.h \
     utilidades.h
 
 DISTFILES += \
-    alojamientos.txt \
-    anfitriones.txt \
-    huespedes.txt \
-    reservas_activas.txt \
-    reservas_historicas.txt
+    data/alojamientos.txt \
+    data/anfitriones.txt \
+    data/huespedes.txt \
+    data/reservas_activas.txt \
+    data/reservas_historicas.txt \
+    huespedes.txt

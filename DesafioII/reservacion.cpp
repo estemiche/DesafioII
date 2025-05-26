@@ -29,3 +29,6 @@ Alojamiento* Reservacion::getAlojamiento() { return alojamiento; }
 void Reservacion::mostrarResumen() {
     printf("Reserva #%d - %d noches - $%.2f - %s\n", codigo, duracion, monto, metodoPago);
 }
+Huesped* Reservacion::getHuesped() {
+    return huesped;
+}

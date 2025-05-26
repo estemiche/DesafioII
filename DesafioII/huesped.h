@@ -21,6 +21,7 @@ public:
     void mostrarReservas() const;
 
     void mostrarDatos() const override;
+    void agregarReservacion(Reservacion* r);
 };
 
 #endif

@@ -62,3 +62,8 @@ void Fecha::cargarDesdeTexto(const char* texto) {
 void Fecha::aCadena(char* buffer) const {
     sprintf(buffer, "%02d/%02d/%04d", dia, mes, anio);
 }
+Fecha Fecha::desdeCadena(const char* texto) {
+    int d, m, a;
+    sscanf(texto, "%d-%d-%d", &d, &m, &a);  // formato esperado: 23-05-2025
+    return Fecha(d, m, a);
+}

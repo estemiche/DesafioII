@@ -24,6 +24,7 @@ public:
 
     void cargarDesdeTexto(const char* texto);
     void aCadena(char* buffer) const;
+    static Fecha desdeCadena(const char* texto);
 };
 
 #endif

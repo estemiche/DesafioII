@@ -45,6 +45,15 @@ public:
 
     void cargarDatos();    // Leer de archivos .txt
     void guardarDatos();   // Escribir en archivos .txt
+    void guardarDatosReservas();
+    void cargarDatosReservas();
+
+    Huesped* buscarHuesped(const char* doc);
+    Alojamiento* buscarAlojamiento(int cod);
+
+    Huesped* loginHuesped();
+    Anfitrion* loginAnfitrion();
+
 };
 
 #endif

@@ -55,6 +55,10 @@ void Huesped::mostrarReservas() const {
 }
 
 void Huesped::mostrarDatos() const {
-    printf("Huésped: %s | Antigüedad: %d meses | Puntuación: %.1f\n",
+    printf("Huesped: %s | Antiguedad: %d meses | Puntuacion: %.1f\n",
            documento, antiguedad, puntuacion);
+}
+void Huesped::agregarReservacion(Reservacion* r) {
+    if (totalReservas == capacidad) expandirReservas();  // Si tienes método expandir
+    reservas[totalReservas++] = r;
 }
