@@ -16,12 +16,12 @@ public:
     Huesped(const char* doc = "", int ant = 0, float punt = 0.0f);
     ~Huesped();
 
-    void agregarReserva(Reservacion* r);
+    void agregarReservacion(Reservacion* r);
     void anularReserva(int codigoReserva);
     void mostrarReservas() const;
 
     void mostrarDatos() const override;
-    void agregarReservacion(Reservacion* r);
+
 };
 
 #endif

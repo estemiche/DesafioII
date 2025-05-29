@@ -27,6 +27,9 @@ private:
     void expandirAnfitriones();
     void expandirAlojamientos();
     void expandirReservaciones();
+    void mostrarReservacionesHuesped(Huesped* h);
+
+
 
 public:
     Plataforma();
@@ -34,26 +37,33 @@ public:
 
     void login();
     void menuHuesped(Huesped*);
-    void menuAnfitrion(Anfitrion*);
+    void menuAnfitrion(Anfitrion* anfitrion);
 
-    void buscarAlojamientos();               // A implementar
-    void crearReservacion(Huesped*);         // A implementar
+    void buscarAlojamientos();
+    void crearReservacion(Huesped*);
     void anularReservacion();
     void consultarReservasAnfitrion(Anfitrion*);
     void actualizarHistorico();
     void medirRecursos();
 
-    void cargarDatos();    // Leer de archivos .txt
-    void guardarDatos();   // Escribir en archivos .txt
+    void cargarDatos();
+    void guardarDatos();
     void guardarDatosReservas();
     void cargarDatosReservas();
+    void cargarDatosAlojamientos();
+    void cargarDatosAnfitriones();
+
+    void mostrarTodasReservacionesAnfitrion(Anfitrion* a);
+    void cancelarReservacionAnfitrion(Anfitrion* a);
+    void actualizarHistoricoAutomatico();
+
 
     Huesped* buscarHuesped(const char* doc);
     Alojamiento* buscarAlojamiento(int cod);
 
     Huesped* loginHuesped();
     Anfitrion* loginAnfitrion();
-
+    Anfitrion* buscarAnfitrion(const char* doc);
 };
 
 #endif

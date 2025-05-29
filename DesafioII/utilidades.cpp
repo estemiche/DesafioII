@@ -11,7 +11,7 @@ int calcularDiaDelAnio(const Fecha& f) {
     for (int i = 1; i < mes; i++) {
         total += diasPorMes[i];
     }
-    return total - 1; // desde 0
+    return total - 1;
 }
 
 void limpiarPantalla() {

@@ -1,13 +1,17 @@
 #include "plataforma.h"
 #include <cstdio>
-#include <cstdlib>  // Para atoi o manejo seguro
-#include <cstring>  // Para strlen
+#include <cstdlib>
+#include <cstring>
 
 int main() {
     Plataforma sistema;
 
+    sistema.cargarDatosAnfitriones();
     sistema.cargarDatos();
+    sistema.cargarDatosAlojamientos();
     sistema.cargarDatosReservas();
+
+
 
     char buffer[100];
     int opcionPrincipal = 0;

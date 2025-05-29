@@ -5,8 +5,8 @@
 class Usuario {
 protected:
     char documento[15];
-    int antiguedad; // en meses
-    float puntuacion; // de 0 a 5
+    int antiguedad;
+    float puntuacion;
 
 public:
     Usuario(const char* doc = "", int ant = 0, float punt = 0.0f);

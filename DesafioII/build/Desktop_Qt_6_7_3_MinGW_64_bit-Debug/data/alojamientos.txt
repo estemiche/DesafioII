@@ -1,0 +1,3 @@
+1001,Hostal Central,Privado,Cra 45 #23-56,Medellin,Antioquia,120.000,1010101010
+1002,Apto El Poblado,Apartamento,Calle 12 #34-78,Medellin,Antioquia,200.000,2020202020
+056060,Los Andes,Finca,cra 50 #12-13,Andes,Antioquia,50.000,2056020205

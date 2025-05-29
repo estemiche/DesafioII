@@ -64,6 +64,6 @@ void Fecha::aCadena(char* buffer) const {
 }
 Fecha Fecha::desdeCadena(const char* texto) {
     int d, m, a;
-    sscanf(texto, "%d-%d-%d", &d, &m, &a);  // formato esperado: 23-05-2025
+    sscanf(texto, "%d-%d-%d", &d, &m, &a);
     return Fecha(d, m, a);
 }

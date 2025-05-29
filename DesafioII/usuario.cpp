@@ -16,7 +16,7 @@ Usuario::Usuario(const Usuario& other) {
 }
 
 Usuario::~Usuario() {
-    // Destructor virtual
+
 }
 
 const char* Usuario::getDocumento() const {

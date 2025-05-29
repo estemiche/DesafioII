@@ -10,9 +10,6 @@ Huesped::Huesped(const char* doc, int ant, float punt)
 }
 
 Huesped::~Huesped() {
-    for (int i = 0; i < totalReservas; i++) {
-        delete reservas[i];
-    }
     delete[] reservas;
 }
 
@@ -26,12 +23,6 @@ void Huesped::expandirReservas() {
     reservas = nuevo;
 }
 
-void Huesped::agregarReserva(Reservacion* r) {
-    if (totalReservas == capacidad) {
-        expandirReservas();
-    }
-    reservas[totalReservas++] = r;
-}
 
 void Huesped::anularReserva(int codigoReserva) {
     for (int i = 0; i < totalReservas; i++) {
@@ -50,7 +41,7 @@ void Huesped::anularReserva(int codigoReserva) {
 
 void Huesped::mostrarReservas() const {
     for (int i = 0; i < totalReservas; i++) {
-        reservas[i]->mostrarResumen(); // se implementará en Reservacion
+        reservas[i]->mostrarResumen();
     }
 }
 
@@ -59,6 +50,6 @@ void Huesped::mostrarDatos() const {
            documento, antiguedad, puntuacion);
 }
 void Huesped::agregarReservacion(Reservacion* r) {
-    if (totalReservas == capacidad) expandirReservas();  // Si tienes método expandir
+    if (totalReservas == capacidad) expandirReservas();
     reservas[totalReservas++] = r;
 }

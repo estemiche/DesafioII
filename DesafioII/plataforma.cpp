@@ -1,4 +1,3 @@
-// Plataforma.cpp (completo sin STL)
 #include "Plataforma.h"
 #include "utilidades.h"
 #include <cstdio>
@@ -94,6 +93,7 @@ void Plataforma::login() {
     printf("Usuario no encontrado.\n");
 }
 
+
 void Plataforma::menuHuesped(Huesped* h) {
     int opcion;
     do {
@@ -106,24 +106,119 @@ void Plataforma::menuHuesped(Huesped* h) {
 
         if (opcion == 1) crearReservacion(h);
         else if (opcion == 2) anularReservacion();
-        else if (opcion == 3) h->mostrarReservas();
+        else if (opcion == 3) mostrarReservacionesHuesped(h); // ← CORRECCIÓN
+
     } while (opcion != 4);
 }
+void Plataforma::mostrarReservacionesHuesped(Huesped* h) {
+    printf("\n=== Mis Reservaciones ===\n");
+    int encontradas = 0;
+
+    for (int i = 0; i < totalReservaciones; i++) {
+        if (reservaciones[i]->getHuesped() == h) {
+            printf("\n--- Reservacion %d ---\n", reservaciones[i]->getCodigo());
+            reservaciones[i]->mostrarResumen();
+            encontradas++;
+        }
+    }
+
+    if (encontradas == 0) {
+        printf("No tienes reservaciones activas.\n");
+    } else {
+        printf("\nTotal de reservaciones: %d\n", encontradas);
+    }
+}
+
+void Plataforma::cancelarReservacionAnfitrion(Anfitrion* a) {
+    // Mostrar las reservaciones del anfitrión
+    printf("\n=== Reservaciones que puedes cancelar ===\n");
+    int encontradas = 0;
+
+    for (int i = 0; i < totalReservaciones; i++) {
+        if (reservaciones[i]->getAlojamiento()->getAnfitrion() == a) {
+            printf("Codigo: %d | Alojamiento: %s\n",
+                   reservaciones[i]->getCodigo(),
+                   reservaciones[i]->getAlojamiento()->getNombre());
+            encontradas++;
+        }
+    }
+
+    if (encontradas == 0) {
+        printf("No tienes reservaciones para cancelar.\n");
+        return;
+    }
+
+    int codigo;
+    printf("\nIngrese el codigo de la reservacion a cancelar: ");
+    scanf("%d", &codigo);
+
+    for (int i = 0; i < totalReservaciones; i++) {
+        if (reservaciones[i]->getCodigo() == codigo &&
+            reservaciones[i]->getAlojamiento()->getAnfitrion() == a) {
+
+            // Liberar las fechas en el alojamiento
+            Fecha inicio = reservaciones[i]->getFechaInicio();
+            int diaInicio = calcularDiaDelAnio(inicio);
+            reservaciones[i]->getAlojamiento()->liberar(diaInicio, reservaciones[i]->getDuracion());
+
+            // Eliminar la reservación
+            delete reservaciones[i];
+            for (int j = i; j < totalReservaciones - 1; j++)
+                reservaciones[j] = reservaciones[j + 1];
+            totalReservaciones--;
+
+            // Guardar automáticamente los cambios
+            guardarDatosReservas();
+
+            printf("Reservacion cancelada correctamente.\n");
+            return;
+        }
+    }
+    printf("No se encontro una reservacion con ese codigo o no es tuya.\n");
+}
+
 
 void Plataforma::menuAnfitrion(Anfitrion* a) {
     int opcion;
     do {
         printf("\n--- Menu Anfitrion ---\n");
-        printf("1. Consultar reservaciones activas\n"
-               "2. Actualizar histórico\n"
-               "3. Salir\nSeleccione una opción: ");
+        printf("1. Ver mis reservaciones\n");
+        printf("2. Cancelar una reservacion\n");
+        printf("3. Salir\n");
+        printf("Seleccione una opcion: ");
         scanf("%d", &opcion);
 
-        if (opcion == 1) consultarReservasAnfitrion(a);
-        else if (opcion == 2) actualizarHistorico();
+        if (opcion == 1) {
+
+            consultarReservasAnfitrion(a);
+        }
+        else if (opcion == 2) {
+            cancelarReservacionAnfitrion(a);
+        }
+        else if (opcion != 3) {
+            printf("Opción inválida.\n");
+        }
+
     } while (opcion != 3);
 }
+void Plataforma::mostrarTodasReservacionesAnfitrion(Anfitrion* a) {
+    printf("\n=== Mis Reservaciones ===\n");
+    int encontradas = 0;
 
+    for (int i = 0; i < totalReservaciones; i++) {
+        if (reservaciones[i]->getAlojamiento()->getAnfitrion() == a) {
+            printf("\n--- Reservacion %d ---\n", reservaciones[i]->getCodigo());
+            reservaciones[i]->mostrarResumen();
+            encontradas++;
+        }
+    }
+
+    if (encontradas == 0) {
+        printf("No tienes reservaciones activas.\n");
+    } else {
+        printf("\nTotal de reservaciones: %d\n", encontradas);
+    }
+}
 void Plataforma::medirRecursos() {
     int memoria = totalHuespedes * sizeof(Huesped) +
                   totalAnfitriones * sizeof(Anfitrion) +
@@ -150,6 +245,7 @@ void Plataforma::anularReservacion() {
             for (int j = i; j < totalReservaciones - 1; j++)
                 reservaciones[j] = reservaciones[j + 1];
             totalReservaciones--;
+            guardarDatosReservas();
             printf("Reservacion anulada correctamente.\n");
             return;
         }
@@ -167,57 +263,42 @@ void Plataforma::consultarReservasAnfitrion(Anfitrion* a) {
     Fecha inicio(d1, m1, a1);
     Fecha fin(d2, m2, a2);
 
+    printf("\n=== Reservaciones del Anfitrion ===\n");
+    int encontradas = 0;
+
     for (int i = 0; i < totalReservaciones; i++) {
         Reservacion* r = reservaciones[i];
-        if (r->getAlojamiento()->getAnfitrion() == a &&
-            r->getFechaInicio().comparar(inicio) >= 0 &&
-            r->getFechaInicio().comparar(fin) <= 0) {
+
+        // Debug: mostrar información de comparación
+        bool esDelAnfitrion = (r->getAlojamiento()->getAnfitrion() == a);
+        bool estaEnRango = (r->getFechaInicio().comparar(inicio) >= 0 &&
+                            r->getFechaInicio().comparar(fin) <= 0);
+
+        if (esDelAnfitrion && estaEnRango) {
+            printf("\n--- Reservacion %d ---\n", r->getCodigo());
             r->mostrarResumen();
-        }
-    }
-}
-
-void Plataforma::actualizarHistorico() {
-    int d, m, a;
-    printf("Ingrese la fecha de corte (DD MM AAAA): ");
-    scanf("%d %d %d", &d, &m, &a);
-    Fecha corte(d, m, a);
-
-    FILE* archivo = fopen("data/reservas_historicas.txt", "a");
-    if (!archivo) {
-        printf("Error al abrir el archivo de historico.\n");
-        return;
-    }
-
-    int i = 0;
-    while (i < totalReservaciones) {
-        Reservacion* r = reservaciones[i];
-        Fecha inicio = r->getFechaInicio();
-        Fecha fin = inicio;
-        fin.sumarDias(r->getDuracion());
-
-        if (fin.comparar(corte) < 0) {
-            char fechaTxt[15];
-            inicio.aCadena(fechaTxt);
-            fprintf(archivo, "%d,%s,%d,%s,%.2f,%s\n",
-                    r->getCodigo(), fechaTxt, r->getDuracion(),
-                    r->getMetodoPago(), r->getMonto(), r->getNotas());
-
-            int diaInicio = calcularDiaDelAnio(inicio);
-            r->getAlojamiento()->liberar(diaInicio, r->getDuracion());
-
-            delete reservaciones[i];
-            for (int j = i; j < totalReservaciones - 1; j++)
-                reservaciones[j] = reservaciones[j + 1];
-            totalReservaciones--;
-        } else {
-            i++;
+            encontradas++;
         }
     }
 
-    fclose(archivo);
-    printf(" Reservaciones antiguas archivadas correctamente.\n");
+    if (encontradas == 0) {
+        printf("No se encontraron reservaciones en el rango de fechas especificado.\n");
+        printf("Total de reservaciones en el sistema: %d\n", totalReservaciones);
+
+        // Debug: mostrar cuántas reservaciones tiene este anfitrión
+        int totalAnfitrion = 0;
+        for (int i = 0; i < totalReservaciones; i++) {
+            if (reservaciones[i]->getAlojamiento()->getAnfitrion() == a) {
+                totalAnfitrion++;
+            }
+        }
+        printf("Reservaciones del anfitrion (todas las fechas): %d\n", totalAnfitrion);
+    } else {
+        printf("\nTotal encontradas: %d\n", encontradas);
+    }
 }
+
+
 
 void Plataforma::cargarDatos() {
     FILE* f = fopen("data/huespedes.txt", "r");
@@ -229,6 +310,41 @@ void Plataforma::cargarDatos() {
     }
     fclose(f);
 }
+void Plataforma::cargarDatosAlojamientos() {
+    FILE* f = fopen("data/alojamientos.txt", "r");
+    if (!f) {
+        printf("No se pudo abrir data/alojamientos.txt\n");
+        return;
+    }
+
+    int cod;
+    char nom[50], tip[20], dir[100], muni[30], depto[30];
+    float precio;
+    char docAnfitrion[15];
+
+    while (fscanf(f, "%d,%49[^,],%19[^,],%99[^,],%29[^,],%29[^,],%f,%14[^\n]",
+                  &cod, nom, tip, dir, muni, depto, &precio, docAnfitrion) == 8) {
+
+        Anfitrion* a = buscarAnfitrion(docAnfitrion);
+        if (!a) {
+            printf("Anfitrion %s no encontrado. Alojamiento %d omitido.\n", docAnfitrion, cod);
+            continue;
+        }
+
+        if (totalAlojamientos == capacidadAlojamientos)
+            expandirAlojamientos();
+
+        alojamientos[totalAlojamientos++] = new Alojamiento(
+            cod, nom, tip, dir, muni, depto, precio, a
+            );
+    }
+
+    fclose(f);
+}
+
+
+
+
 
 void Plataforma::guardarDatos() {
     FILE* f = fopen("data/huespedes.txt", "w");
@@ -241,9 +357,11 @@ void Plataforma::guardarDatos() {
     }
     fclose(f);
 }
-// Función guardarDatosReservas()
 void Plataforma::guardarDatosReservas() {
-    FILE* f = fopen("data/reservaciones.txt", "w");
+
+
+    // Guardar las reservas activas
+    FILE* f = fopen("data/reservas_activas.txt", "w");
     if (!f) {
         printf("Error al guardar reservaciones.\n");
         return;
@@ -263,6 +381,8 @@ void Plataforma::guardarDatosReservas() {
     fclose(f);
     printf("Reservaciones guardadas correctamente.\n");
 }
+
+
 
 
 
@@ -288,7 +408,7 @@ void Plataforma::buscarAlojamientos() {
         scanf("%f", &precioMax);
     }
 
-    printf("¿Desea aplicar filtro de puntuación mínima del anfitrion? (1 = Sí, 0 = No): ");
+    printf("¿Desea aplicar filtro de puntuacion minima del anfitrion? (1 = Si, 0 = No): ");
     int filtroPunt;
     scanf("%d", &filtroPunt);
     if (filtroPunt) {
@@ -327,7 +447,7 @@ void Plataforma::crearReservacion(Huesped* h) {
     printf("\n Reservar alojamiento\n");
     printf("Ingrese la fecha de inicio (DD MM AAAA): ");
     scanf("%d %d %d", &d, &m, &a);
-    printf("Ingrese el municipio: ");
+    printf("Ingrese el municipio:");
     scanf("%s", municipio);
     printf("Ingrese la cantidad de noches: ");
     scanf("%d", &noches);
@@ -341,7 +461,7 @@ void Plataforma::crearReservacion(Huesped* h) {
     for (int i = 0; i < totalAlojamientos; i++) {
         Alojamiento* al = alojamientos[i];
         if (strcmp(al->getMunicipio(), municipio) == 0 && al->estaDisponible(diaInicio, noches)) {
-            printf("Código: %d | %s | $%.2f/noche | %.1f estrellas\n",
+            printf("Codigo: %d | %s | $%.2f/noche | %.1f estrellas\n",
                    al->getCodigo(), al->getNombre(), al->getPrecioPorNoche(),
                    al->getAnfitrion()->getPuntuacion());
             disponibles++;
@@ -403,14 +523,20 @@ void Plataforma::crearReservacion(Huesped* h) {
     // Crear reservación
     if (totalReservaciones == capacidadReservaciones) expandirReservaciones();
     int nuevoCodigo = totalReservaciones + 1001;
-    reservaciones[totalReservaciones++] = new Reservacion(nuevoCodigo, fechaInicio, noches,
-                                                          metodoPago, monto, notas, h, elegido);
+
+    Reservacion* nuevaReserva = new Reservacion(nuevoCodigo, fechaInicio, noches,
+                                                metodoPago, monto, notas, h, elegido);
+    reservaciones[totalReservaciones++] = nuevaReserva;
 
     elegido->reservar(diaInicio, noches);
 
-    printf("Reservación creada con exito.\n");
+    // AGREGAR ESTA LÍNEA: Asociar la reservación al huésped
+    h->agregarReservacion(nuevaReserva);
+
+    printf("Reservacion creada con exito.\n");
     printf("Codigo: %d | Inicio: %02d/%02d/%04d | Noches: %d | Monto: $%.2f\n",
            nuevoCodigo, d, m, a, noches, monto);
+    guardarDatosReservas();
 }
 // Función buscarHuesped por documento
 Huesped* Plataforma::buscarHuesped(const char* doc) {
@@ -432,8 +558,11 @@ Alojamiento* Plataforma::buscarAlojamiento(int cod) {
 
 // Función cargarDatosReservas
 void Plataforma::cargarDatosReservas() {
-    FILE* f = fopen("data/reservaciones.txt", "r");
-    if (!f) return;
+    FILE* f = fopen("data/reservas_activas.txt", "r");
+    if (!f) {
+        printf("No se pudo cargar reservaciones activas.\n");
+        return;
+    }
 
     int cod, duracion, codAloj;
     char fechaTxt[15], docHuesped[15];
@@ -450,11 +579,15 @@ void Plataforma::cargarDatosReservas() {
 
         if (h && a) {
             if (totalReservaciones == capacidadReservaciones) expandirReservaciones();
-            reservaciones[totalReservaciones++] = new Reservacion(cod, fecha, duracion, metodo, monto, notas, h, a);
+
+            Reservacion* nuevaReserva = new Reservacion(cod, fecha, duracion, metodo, monto, notas, h, a);
+            reservaciones[totalReservaciones++] = nuevaReserva;
 
             int diaInicio = calcularDiaDelAnio(fecha);
             a->reservar(diaInicio, duracion);
-            h->agregarReservacion(reservaciones[totalReservaciones - 1]);
+
+
+            h->agregarReservacion(nuevaReserva);
         }
     }
     fclose(f);
@@ -487,5 +620,68 @@ Anfitrion* Plataforma::loginAnfitrion() {
     printf("Anfitrion no encontrado.\n");
     return nullptr;
 }
+Anfitrion* Plataforma::buscarAnfitrion(const char* doc) {
+    for (int i = 0; i < totalAnfitriones; i++) {
+        if (strcmp(anfitriones[i]->getDocumento(), doc) == 0)
+            return anfitriones[i];
+    }
+    return nullptr;
+}
+void Plataforma::cargarDatosAnfitriones() {
+    FILE* f = fopen("data/anfitriones.txt", "r");
+    if (!f) {
+        printf("No se pudo abrir data/anfitriones.txt\n");
+        return;
+    }
+
+    char doc[15];
+    int antig;
+    float punt;
+
+    while (fscanf(f, "%[^,],%d,%f\n", doc, &antig, &punt) == 3) {
+        if (totalAnfitriones == capacidadAnfitriones) expandirAnfitriones();
+        anfitriones[totalAnfitriones++] = new Anfitrion(doc, antig, punt);
+    }
+
+    fclose(f);
+
+}
+void Plataforma::actualizarHistoricoAutomatico() {
+    FILE* archivo = fopen("data/reservas_historicas.txt", "a");
+    if (!archivo) {
+        return;
+    }
+
+    int i = 0;
+    int movidas = 0;
+
+    // Solo archiva reservas que tengan más de 365 días desde inicio del año
+    while (i < totalReservaciones) {
+        Reservacion* r = reservaciones[i];
+        Fecha inicio = r->getFechaInicio();
+        int diaInicio = calcularDiaDelAnio(inicio);
+        int duracion = r->getDuracion();
+        int diaFin = diaInicio + duracion;
 
 
+        if (diaFin < 100) {
+            char fechaTxt[15];
+            inicio.aCadena(fechaTxt);
+            fprintf(archivo, "%d,%s,%d,%s,%.2f,%s\n",
+                    r->getCodigo(), fechaTxt, r->getDuracion(),
+                    r->getMetodoPago(), r->getMonto(), r->getNotas());
+
+            delete reservaciones[i];
+            for (int j = i; j < totalReservaciones - 1; j++)
+                reservaciones[j] = reservaciones[j + 1];
+            totalReservaciones--;
+            movidas++;
+        } else {
+            i++;
+        }
+    }
+
+    fclose(archivo);
+
+
+}

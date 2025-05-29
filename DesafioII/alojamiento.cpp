@@ -17,7 +17,7 @@ Alojamiento::Alojamiento(int cod, const char* nom, const char* tip, const char* 
     amenidades = new char*[capacidadAmenidades];
 
     for (int i = 0; i < 365; i++) {
-        disponibilidad[i] = false; // todo está libre al principio
+        disponibilidad[i] = false;
     }
 }
 
@@ -86,7 +86,7 @@ void Alojamiento::reservar(int diaDelAnio, int noches) {
 }
 
 void Alojamiento::mostrarReservas() {
-    printf("[Pendiente de implementar: conexión con lista de reservaciones]\n");
+    printf("[Pendiente de implementar: conexion con lista de reservaciones]\n");
 }
 void Alojamiento::liberar(int diaInicio, int noches) {
     for (int i = diaInicio; i < diaInicio + noches && i < 365; i++) {

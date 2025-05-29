@@ -35,7 +35,7 @@ void Anfitrion::agregarAlojamiento(Alojamiento* a) {
 
 void Anfitrion::consultarReservasActivas() const {
     for (int i = 0; i < totalAlojamientos; i++) {
-        alojamientos[i]->mostrarReservas(); // asumimos que esta función existe en Alojamiento
+        alojamientos[i]->mostrarReservas();
     }
 }
 
